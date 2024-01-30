@@ -26,7 +26,10 @@ const featureIcons = {
 };
 
 // Change language route
-router.get("/change-language/:lang", (req, res) => {
+router.get("/change-language/:lang", 
+indexController.getchange-languageBylang);
+
+getchange-languageBylanggetchange-languageBylang : (req, res) => {
   const { lang } = req.params;
 
   // Validate that the requested language is supported
@@ -41,11 +44,14 @@ router.get("/change-language/:lang", (req, res) => {
   } else {
     res.status(404).send("Invalid language");
   }
-});
+},
 
 
 
-router.get("/", async (req, res) => {
+router.get("/", 
+indexController.get/);
+
+async (req, res) => {
   console.log("this is a session token", req.session.csrfToken);
   // Explicitly set language from session
   req.i18n.changeLanguage(req.session.lang);
@@ -166,12 +172,14 @@ router.get("/", async (req, res) => {
     console.log(err);
     res.status(500).send("Server Error");
   }
-});
+},
 
 
 
 
-router.get("/activate-your-account", async (req, res, next) => {
+router.get("/activate-your-account", 
+indexController.getactivate-your-account);
+getactivate-your-account : async (req, res, next) => {
   try {
     req.i18n.changeLanguage(req.session.lang);
 
@@ -191,7 +199,7 @@ router.get("/activate-your-account", async (req, res, next) => {
     console.log(err);
     res.status(500).send("Server Error");
   }
-});
+},
 
 
 
@@ -199,113 +207,39 @@ router.get("/activate-your-account", async (req, res, next) => {
 router.get(
   "/hotels/:id/roomtypes",
   middleware.emailVerified,
-  async (req, res) => {
-    try {
-      const hotel = await Hotel.findById(req.params.id).populate("roomtypes");
-      const roomTypes = hotel.roomtypes;
-
-      console.log(hotel);
-      console.log(roomTypes)
-
-      res.render("pages/viewAccomodation", {
-        roomTypes,
-        hotelName: hotel.name,
-        hotel,
-      });
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Server Error");
-    }
-  }
-);
+  indexController.gethotelsByidByroomtypes);
 
 
 
 
 
 //Get hotel view specific hotels
-router.get("/hotels/HotelName", async (req, res) => {
-  try {
-    let cart;
-    let guest;
-    let cartItemsCount = 0;
-
-    if (req.user) {
-      cart = await Cart.findOne({ user: req.user._id });
-      guest = await Guest.findOne({ user: req.user._id });
-
-      cartItemsCount = cart.items.reduce((acc, item) => acc + item.noRooms, 0);
-    }
-    if (!req.user || !cart) {
-      cart = new Cart({});
-    }
-    const pay = process.env.PAYSTACK_KEY;
-
-    res.render("bookings/hotel", {
-      //csrfToken: req.csrfToken(),
-      cart: cart,
-      pay: pay,
-      guest: guest,
-    });
-  } catch (err) {
-    console.log(err.message);
-    res.redirect("/");
-  }
-});
+router.get("/hotels/HotelName", 
+indexController.gethotelsByHotelName);
 
 
 
 
 //routes to display car rentals  Data and all its associated routes
-router.get("/rentals", async (req, res) => {
-  try {
-    //Queries heere
-    res.render("bookings/carR", {
-      market: req.t("home:market"),
-    });
-  } catch (err) {
-    console.log(err.message);
-    res.redirect("/");
-  }
-});
+router.get("/rentals", 
+indexController.getrentals);
+
 
 
 
 //routes to display car rentals  Data and all its associated routes
-router.get("/marketplace", async (req, res) => {
-  try {
-    //code here
-    res.render("bookings/market", {});
-  } catch (err) {
-    console.log(err.message);
-    res.redirect("/");
-  }
-});
+router.get("/marketplace",
+indexController.getmarketplace);
 
 
-
-router.get("/food", async (req, res) => {
-  try {
-    //code here
-    res.render("bookings/food", {});
-  } catch (err) {
-    console.log(err.message);
-    res.redirect("/");
-  }
-});
-
+router.get("/food", 
+indexController.getfood);
 
 
 //routes to display car rentals  Data and all its associated routes
-router.get("/attractions", async (req, res) => {
-  try {
-    //code here
-    res.render("bookings/attra", {});
-  } catch (err) {
-    console.log(err.message);
-    res.redirect("/");
-  }
-});
+router.get("/attractions", 
+indexController.getattractions);
+
 
 
 

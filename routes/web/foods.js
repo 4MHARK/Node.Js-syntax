@@ -33,7 +33,7 @@ router.post(
   middleware.isAdmin, foodController.postCreateFood);
 
 //GET:  Render the edit form
-router.get('/edit/:foodId', foodController.getEditFoodById)
+router.get('/edit/:foodId', foodController.getEditFoodById);
 //POST: Receive and update the Schema:
 router.post('/edit/:foodId', storage({ single: 'foodPicture' }), foodController.postEditFoodById)
 // Delete a food item by ID
