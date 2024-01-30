@@ -1,64 +1,25 @@
 const express = require("express");
-const Hotel = require("../../models/hotel");
-const MarketItem = require("../../models/market");
 const middleware = require("../../middleware/confirm");
 const storage = require("../../middleware/storage");
-const Category = require("../../models/category");
-const mongoose = require("mongoose");
 const fs = require("fs");
-const path = require("path");
-
+const marketController = require("../../controller/marketsController");
 const router = express.Router();
 
 
-
 // View all market items with dropdown for category
-router.get(
-  "/marketitems",
-  middleware.isLoggedIn,
-  middleware.isAdmin, marketController.getmarketitems);
-
-
-
-
+router.get("/marketitems",middleware.isLoggedIn,middleware.isAdmin, marketController.getmarketitems);
 // GET Create a new hotel
-router.get(
-  "/create/products",
-  middleware.isLoggedIn,
-  middleware.isAdmin, marketController.getcreateBymarket);
- 
-
-
-
+router.get("/create/products",middleware.isLoggedIn,middleware.isAdmin, marketController.getCreateProduct);
 // Create a new market item
-router.post("/create/products",
-storage({ single: 'productPicture' }), marketController.postcreateByproduct);
-
-
-
+router.post("/create/products", storage({ single: 'productPicture' }), marketController.postCreateProduct);
 //GET:  Render the edit form
-router.get('/edit/products/:productId',
-marketController.geteditByproductsBy:productId);
-
-
-
-
+router.get('/edit/products/:productId', marketController.getEditProductsById);
 //POST: Receive and update the Schema:
-router.post('/edit/products/:productId', storage({ single: 'productPicture' }), 
-marketController.posteditByproductBy:productId);
-
-
-
-
+router.post('/edit/products/:productId', storage({ single: 'productPicture' }),marketController.postEditProductsById);
 // Get a specific market item by ID
-router.get("/marketitems/:id",
-marketController.getmarketitemsBy:id);
-
-
-
-
+router.get("/marketitems/:id", marketController.getMarketitemsById);
 // Delete a category by ID
-router.post("/products/delete", marketController.postproductsBydelete);
+router.post("/products/delete", marketController.postDeleteProductById);
 
 
 
