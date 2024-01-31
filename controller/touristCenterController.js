@@ -42,7 +42,7 @@ const touristCenterController = {
           res.redirect("/");
         }
       },
-      getcreateBycentres :  async (req, res) => {
+      getcreatecentres :  async (req, res) => {
 
         const successMsg = req.flash("success")[0];
         const errorMsg = req.flash("error")[0];
@@ -67,7 +67,7 @@ const touristCenterController = {
         }
       },
       
-      postcreateBycentres:  async (req, res) => {
+      postcreatecentres:  async (req, res) => {
         try {
     
           //const centreData = req.body;
@@ -150,7 +150,7 @@ const touristCenterController = {
           });
         }
       },
-      posttourplaceBydelete: async (req, res) => {
+      posttourplacedelete: async (req, res) => {
         try {
           const idsToDelete = req.body.ids;
       
@@ -197,7 +197,7 @@ const touristCenterController = {
       },
 
 
-      gettourplaceByeditBy:placeId:  async (req, res) => {
+      gettourplaceeditByplaceId:  async (req, res) => {
 
         try {
       
@@ -229,7 +229,7 @@ const touristCenterController = {
         }
       },
 
-      posttourplaceByeditBy:placeId:  async (req, res) => {
+      posttourplaceeditByplaceId:  async (req, res) => {
         try {
     
           const placeId = req.params.placeId;

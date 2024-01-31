@@ -58,7 +58,7 @@ const marketsController = {
         }
       },
 
-      postcreateByproduct :async (req, res) => {
+      postcreateproduct :async (req, res) => {
         try {
         
         const productData = req.body;
@@ -142,7 +142,7 @@ const marketsController = {
         });
         }
         },
-        geteditByproductsBy:productId: async (req, res) => {
+        geteditproductsByproductId: async (req, res) => {
             try {
               const productId = req.params.productId;
           
@@ -170,7 +170,7 @@ const marketsController = {
             }
           },
 
-          posteditByproductBy:productId :async (req, res) => {
+          posteditproductByproductId : async (req, res) => {
             try {
               const productId = req.params.productId;
               const productData = req.body;
@@ -235,7 +235,7 @@ const marketsController = {
             }
           },
 
-          getmarketitemsBy:id :async (req, res) => {
+          getmarketitemsByid :async (req, res) => {
             try {
               const marketItem = await MarketItem.findById(req.params.id).populate(
                 "category"
@@ -252,7 +252,7 @@ const marketsController = {
             }
           },
 
-          postproductsBydelete :  async (req, res) => {
+          postproductsdelete :  async (req, res) => {
             try {
               //const catId = req.params.roomId;
               const idsToDelete = req.body.ids;

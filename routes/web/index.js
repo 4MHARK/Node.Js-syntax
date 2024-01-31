@@ -29,27 +29,12 @@ const featureIcons = {
 router.get("/change-language/:lang", 
 indexController.getchange-languageBylang);
 
-getchange-languageBylanggetchange-languageBylang : (req, res) => {
-  const { lang } = req.params;
 
-  // Validate that the requested language is supported
-  const supportedLanguages = ["en", "es", "fr", "de"];
-  if (supportedLanguages.includes(lang)) {
-    // Change the language in the i18next instance
-    req.i18n.changeLanguage(lang);
-    console.log("Updated language:", lang);
-    req.session.lang = lang;
-    // Redirect back to the previous page or a specific page
-    res.redirect(req.get("referer") || "/");
-  } else {
-    res.status(404).send("Invalid language");
-  }
-},
 
 
 
 router.get("/", 
-indexController.get/);
+// indexController.get/);
 
 async (req, res) => {
   console.log("this is a session token", req.session.csrfToken);
@@ -178,28 +163,7 @@ async (req, res) => {
 
 
 router.get("/activate-your-account", 
-indexController.getactivate-your-account);
-getactivate-your-account : async (req, res, next) => {
-  try {
-    req.i18n.changeLanguage(req.session.lang);
-
-    const lang = req.cookies.lang || req.session.lang || res.locals.lang;
-
-    console.log(lang);
-
-    const successMsg = req.flash("success")[0];
-    const errorMsg = req.flash("error")[0];
-    res.render("user/confirm", {
-      successMsg,
-      errorMsg,
-      lang,
-      //csrfToken: req.csrfToken(),
-    });
-  } catch (err) {
-    console.log(err);
-    res.status(500).send("Server Error");
-  }
-},
+indexController.getactivateyouraccount);
 
 
 
@@ -207,7 +171,7 @@ getactivate-your-account : async (req, res, next) => {
 router.get(
   "/hotels/:id/roomtypes",
   middleware.emailVerified,
-  indexController.gethotelsByidByroomtypes);
+  indexController.gethotelsByidroomtypes);
 
 
 
@@ -215,7 +179,7 @@ router.get(
 
 //Get hotel view specific hotels
 router.get("/hotels/HotelName", 
-indexController.gethotelsByHotelName);
+indexController.gethotelsHotelName);
 
 
 

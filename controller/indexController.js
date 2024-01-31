@@ -16,18 +16,53 @@ const indexController = {
 
 
 
+  getchangelanguagelanggetchangelanguageBylang : (req, res) => {
+    const { lang } = req.params;
+
+    // Validate that the requested language is supported
+    const supportedLanguages = ["en", "es", "fr", "de"];
+    if (supportedLanguages.includes(lang)) {
+      // Change the language in the i18next instance
+      req.i18n.changeLanguage(lang);
+      console.log("Updated language:", lang);
+      req.session.lang = lang;
+      // Redirect back to the previous page or a specific page
+      res.redirect(req.get("referer") || "/");
+    } else {
+      res.status(404).send("Invalid language");
+    }
+  },
+
+
+
+
+  getactivateyouraccount : async (req, res, next) => {
+    try {
+      req.i18n.changeLanguage(req.session.lang);
+  
+      const lang = req.cookies.lang || req.session.lang || res.locals.lang;
+  
+      console.log(lang);
+  
+      const successMsg = req.flash("success")[0];
+      const errorMsg = req.flash("error")[0];
+      res.render("user/confirm", {
+        successMsg,
+        errorMsg,
+        lang,
+        //csrfToken: req.csrfToken(),
+      });
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("Server Error");
+    }
+  },
 
 
 
 
 
-
-
-
-
-
-
-    gethotelsByidByroomtypes :  async (req, res) => {
+    gethotelsByidroomtypes :  async (req, res) => {
         try {
           const hotel = await Hotel.findById(req.params.id).populate("roomtypes");
           const roomTypes = hotel.roomtypes;
@@ -45,7 +80,7 @@ const indexController = {
           res.status(500).send("Server Error");
         }
       },
-      gethotelsByHotelName : async (req, res) => {
+      gethotelsHotelName : async (req, res) => {
         try {
           let cart;
           let guest;

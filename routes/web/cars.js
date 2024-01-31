@@ -26,30 +26,6 @@ router.get(
   "/create/car-rentals",
   middleware.isLoggedIn,
   middleware.isAdmin, carsController.getcreateBycar-rentals);
-
-  getcreateBycar-rentals ; async (req, res) => {
-    const successMsg = req.flash("success")[0];
-    const errorMsg = req.flash("error")[0];
-
-    try {
-      const hotels = await Hotel.find({});
-      const tourGuides = await LocalTour.find({});
-
-      res.render("admin/carRentals/createCars", {
-        pageName: "Create Car",
-        successMsg,
-        errorMsg,
-        hotels,
-        tourGuides,
-      });
-    } catch (err) {
-      console.error(err);
-      req.flash("error", "Failed to fetch data");
-      res.redirect("/");
-    }
-  },
-
-
 //POST Create car Rebtals
 router.post(
   "/create/carRentals",

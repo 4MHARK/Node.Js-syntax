@@ -54,7 +54,7 @@ localToursController.geteditBytourId);
 
 //POST: Receive and update the Schema:
 router.post('/edit/:tourId', storage({ single: 'tourImage' }), 
-localToursController.posteditBy:tourId);
+localToursController.posteditBytourId);
 
 
 

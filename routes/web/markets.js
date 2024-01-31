@@ -38,21 +38,21 @@ storage({ single: 'productPicture' }), marketController.postcreateByproduct);
 
 //GET:  Render the edit form
 router.get('/edit/products/:productId',
-marketController.geteditByproductsBy:productId);
+marketController.geteditproductsByproductId);
 
 
 
 
 //POST: Receive and update the Schema:
 router.post('/edit/products/:productId', storage({ single: 'productPicture' }), 
-marketController.posteditByproductBy:productId);
+marketController.posteditproductByproductId);
 
 
 
 
 // Get a specific market item by ID
 router.get("/marketitems/:id",
-marketController.getmarketitemsBy:id);
+marketController.getmarketitemsByid);
 
 
 

@@ -4,7 +4,7 @@ const Room = require("../../models/room");
 
 
 const roomController = {
-    get/: async (req, res) => {
+    getAllRooms: async (req, res) => {
         const successMsg = req.flash("success")[0]; // get success flash message
         const errorMsg = req.flash("error")[0]; // get error flash message
         const perPage = 8; // set the number of rooms to display per page

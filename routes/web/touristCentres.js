@@ -27,7 +27,7 @@ router.get(
 router.get(
   "/create/centres/",
   middleware.isLoggedIn,
-  middleware.isAdmin, touristCenterController.getcreateBycentres);
+  middleware.isAdmin, touristCenterController.getcreatecentres);
  
 
 //POST: Create local Tours
@@ -35,14 +35,14 @@ router.post(
   "/create/centres",
   storage({ single: "centreImage" }),
   middleware.isLoggedIn,
-  middleware.isAdmin,  touristCenterController.postcreateBycentres);
+  middleware.isAdmin,  touristCenterController.postcreatecentres);
  
 
 
 
 // POST: Delete by IDS
 router.post("/tourplace/delete",
-touristCenterController.posttourplaceBydelete);
+touristCenterController.posttourplacedelete);
 
 
 
@@ -50,7 +50,7 @@ touristCenterController.posttourplaceBydelete);
 
 //GET:  Render the edit form
 router.get('/tourplace/edit/:placeId', 
-touristCenterController.gettourplaceByeditBy:placeId);
+touristCenterController.gettourplaceeditByplaceId);
 
 
 
@@ -59,7 +59,7 @@ touristCenterController.gettourplaceByeditBy:placeId);
 
 // POST: Receive and update the Schema:
 router.post(
-  "/tourplace/edit/:placeId",  touristCenterController.posttourplaceByeditBy:placeId);
+  "/tourplace/edit/:placeId",  touristCenterController.posttourplaceeditByplaceId);
   storage({ single: "centreImage" }),
  
 

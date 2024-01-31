@@ -49,6 +49,28 @@ const carsController = {
 
       //space for car-rentals
 
+      getcreateBycarrentals : async (req, res) => {
+        const successMsg = req.flash("success")[0];
+        const errorMsg = req.flash("error")[0];
+    
+        try {
+          const hotels = await Hotel.find({});
+          const tourGuides = await LocalTour.find({});
+    
+          res.render("admin/carRentals/createCars", {
+            pageName: "Create Car",
+            successMsg,
+            errorMsg,
+            hotels,
+            tourGuides,
+          });
+        } catch (err) {
+          console.error(err);
+          req.flash("error", "Failed to fetch data");
+          res.redirect("/");
+        }
+      },
+
 
  postcreateBycarRentals : async (req, res) => {
     try {

@@ -39,7 +39,7 @@ const localToursController = {
       },
 
 
-      getcreateBylocal-tour :  async (req, res) => {
+      getcreatelocaltour :  async (req, res) => {
         const successMsg = req.flash("success")[0];
         const errorMsg = req.flash("error")[0];
     
@@ -59,7 +59,7 @@ const localToursController = {
         }
       },
 
-      postcreateBytours :  async (req, res) => {
+      postcreatetours :  async (req, res) => {
         try {
           const tourData = req.body;
     
@@ -137,7 +137,7 @@ const localToursController = {
 
 
 
-      posttoursBydelete : async (req, res) => {
+      posttoursdelete : async (req, res) => {
         try {
           const idsToDelete = req.body.ids;
           
@@ -203,7 +203,7 @@ const localToursController = {
           res.redirect('/tour/localtours');
         }
       },
-      posteditBy:tourId :  async (req, res) => {
+      posteditBytourId :  async (req, res) => {
         try {
           const tourId = req.params.tourId;
           const tourData = req.body;
