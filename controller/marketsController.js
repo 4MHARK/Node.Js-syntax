@@ -1,74 +1,72 @@
 const express = require("express");
 const Hotel = require("../../models/hotel");
 const MarketItem = require("../../models/market");
-const middleware = require("../../middleware/confirm");
-const storage = require("../../middleware/storage");
 const Category = require("../../models/category");
 const mongoose = require("mongoose");
 const fs = require("fs");
 const path = require("path");
 
-const router = express.Router();
-
 
 const marketsController = {
 
-    getmarketitems :  async (req, res) => {
-        const successMsg = req.flash("success")[0];
-        const errorMsg = req.flash("error")[0];
-    
-        try {
-          // Fetch all market items with populated category reference
-          const marketItems = await MarketItem.find({}).populate("category").populate("hotel");
-    
-          res.render("admin/market/markets", {
-            marketItems,
-            successMsg,
-            errorMsg,
-            pageName: "Market Item Lists",
-              });
-        } catch (err) {
-          console.error(err);
-          req.flash("error", "Failed to fetch market item data");
-          res.redirect("/");
-        }
-      },
 
-      getcreateBymarket :  async(req, res) => {
-        const successMsg = req.flash("success")[0];
-        const errorMsg = req.flash("error")[0];
-        
-        const hotels = await Hotel.find({});
-        const categories = await Category.find({});
-    
-        try {
-    
-           res.render("admin/market/createProduct", {
-             pageName: "Create Hotel",
-             successMsg,
-             errorMsg,
-             hotels,
-             categories,
-             url: process.env.HOST,
-           });
-        } catch (err) {
-          console.error(err);
-          req.flash("error", "Failed to fetch market item data");
-          res.redirect("/");
-        }
-      },
+  getmarketitems: async (req, res) => {
+    const successMsg = req.flash("success")[0];
+    const errorMsg = req.flash("error")[0];
 
-      postcreateproduct :async (req, res) => {
+    try {
+      // Fetch all market items with populated category reference
+      const marketItems = await MarketItem.find({})
+        .populate("category")
+        .populate("hotel");
+
+      res.render("admin/market/markets", {
+        marketItems,
+        successMsg,
+        errorMsg,
+        pageName: "Market Item Lists",
+      });
+    } catch (err) {
+      console.error(err);
+      req.flash("error", "Failed to fetch market item data");
+      res.redirect("/");
+    }
+  },
+
+  getCreateProducts: async (req, res) => {
+    const successMsg = req.flash("success")[0];
+    const errorMsg = req.flash("error")[0];
+
+    const hotels = await Hotel.find({});
+    const categories = await Category.find({});
+
+    try {
+      res.render("admin/market/createProduct", {
+        pageName: "Create Hotel",
+        successMsg,
+        errorMsg,
+        hotels,
+        categories,
+        url: process.env.HOST,
+      });
+    } catch (err) {
+      console.error(err);
+      req.flash("error", "Failed to fetch market item data");
+      res.redirect("/");
+    }
+  },
+
+      postcreateproducts :async (req, res) => {
         try {
         
         const productData = req.body;
         
         if (!req.file) {
         throw new Error("Product picture is missing");
-        }
-        
-        //Extract the form data from the request body
-        const {
+      }
+
+      //Extract the form data from the request body
+      const {
         productCode,
         productName,
         productDescription,
@@ -78,64 +76,63 @@ const marketsController = {
         manufacturer,
         available,
         hotel,
-        } = req.body;
-        
-        const productPicture = req.file;
-        const pictureExtension = path.extname(productPicture.originalname);
-        const pictureName = `${productName}${pictureExtension}`;
-        
-        const directoryPath = path.join(
+      } = req.body;
+
+      const productPicture = req.file;
+      const pictureExtension = path.extname(productPicture.originalname);
+      const pictureName = `${productName}${pictureExtension}`;
+
+      const directoryPath = path.join(
         __dirname,
-        "..", // Adjust the relative path here based on your project structure
         "..", // Go up one more level to the main project directory
         "public",
         "storage",
         "market"
-        );
-        
-        const picturePath = path.join(directoryPath, pictureName);
-        
-        // Create the directory if it doesn't exist
-        if (!fs.existsSync(directoryPath)) {
+      );
+
+      const picturePath = path.join(directoryPath, pictureName);
+
+      // Create the directory if it doesn't exist
+      if (!fs.existsSync(directoryPath)) {
         fs.mkdirSync(directoryPath, { recursive: true });
-        }
-        
-        // Move the renamed image to the desired directory
-        fs.renameSync(productPicture.path, picturePath);
-        
-        // Convert hotel value to ObjectId
-        const categoryObjectId = mongoose.Types.ObjectId(category);
-        const hotelObjectId = mongoose.Types.ObjectId(hotel);
-        
-        newimagePath = `/storage/market/${pictureName}`;
-        
-        // Create a new MarketItem instance
-        const newMarketItem = new MarketItem({
+      }
+
+      // Move the renamed image to the desired directory
+      fs.renameSync(productPicture.path, picturePath);
+
+      // Convert hotel value to ObjectId
+      const categoryObjectId = mongoose.Types.ObjectId(category);
+      const hotelObjectId = mongoose.Types.ObjectId(hotel);
+
+      newimagePath = `/storage/market/${pictureName}`;
+
+      // Create a new MarketItem instance
+      const newMarketItem = new MarketItem({
         productCode,
         price,
         manufacturer,
         available,
-        quantity:quantityProduct,
+        quantity: quantityProduct,
         name: productName,
-        imagePath:newimagePath,
+        imagePath: newimagePath,
         description: productDescription,
         category: categoryObjectId,
         hotel: hotelObjectId,
         available: true,
-        });
-        
-        // Save the new market item to the database
-        await newMarketItem.save();
-        req.flash("success", "Market item created successfully");
-        res.json({
+      });
+
+      // Save the new market item to the database
+      await newMarketItem.save();
+      req.flash("success", "Market item created successfully");
+      res.json({
         success: true,
         message: "Hotels created successfully",
         redirectUrl: `/market/marketitems`,
-        });
-        } catch (error) {
-        console.error(error);
-        req.flash("error", "Failed to create market item");
-        res.json({
+      });
+    } catch (error) {
+      console.error(error);
+      req.flash("error", "Failed to create market item");
+      res.json({
         success: true,
         message: "Error: Hotels cannot be created",
         redirectUrl: `/market/marketitems`,
@@ -170,7 +167,7 @@ const marketsController = {
             }
           },
 
-          posteditproductByproductId : async (req, res) => {
+          posteditproductByproductId :async (req, res) => {
             try {
               const productId = req.params.productId;
               const productData = req.body;
@@ -252,7 +249,7 @@ const marketsController = {
             }
           },
 
-          postproductsdelete :  async (req, res) => {
+          postDeleteProducts :  async (req, res) => {
             try {
               //const catId = req.params.roomId;
               const idsToDelete = req.body.ids;
@@ -301,4 +298,12 @@ const marketsController = {
 
 };
 
-module.export = marketsController;
+
+
+
+
+
+
+
+
+module.exports = marketsController;

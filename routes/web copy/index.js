@@ -26,17 +26,26 @@ const featureIcons = {
 };
 
 // Change language route
-router.get("/change-language/:lang", 
-indexController.getchange-languageBylang);
+router.get("/change-language/:lang", (req, res) => {
+  const { lang } = req.params;
+
+  // Validate that the requested language is supported
+  const supportedLanguages = ["en", "es", "fr", "de"];
+  if (supportedLanguages.includes(lang)) {
+    // Change the language in the i18next instance
+    req.i18n.changeLanguage(lang);
+    console.log("Updated language:", lang);
+    req.session.lang = lang;
+    // Redirect back to the previous page or a specific page
+    res.redirect(req.get("referer") || "/");
+  } else {
+    res.status(404).send("Invalid language");
+  }
+});
 
 
 
-
-
-router.get("/", 
- indexController.getAllRooom);
-
-async (req, res) => {
+router.get("/", async (req, res) => {
   console.log("this is a session token", req.session.csrfToken);
   // Explicitly set language from session
   req.i18n.changeLanguage(req.session.lang);
@@ -157,13 +166,32 @@ async (req, res) => {
     console.log(err);
     res.status(500).send("Server Error");
   }
-},
+});
 
 
 
 
-router.get("/activate-your-account", 
-indexController.getactivateyouraccount);
+router.get("/activate-your-account", async (req, res, next) => {
+  try {
+    req.i18n.changeLanguage(req.session.lang);
+
+    const lang = req.cookies.lang || req.session.lang || res.locals.lang;
+
+    console.log(lang);
+
+    const successMsg = req.flash("success")[0];
+    const errorMsg = req.flash("error")[0];
+    res.render("user/confirm", {
+      successMsg,
+      errorMsg,
+      lang,
+      //csrfToken: req.csrfToken(),
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send("Server Error");
+  }
+});
 
 
 
@@ -171,39 +199,113 @@ indexController.getactivateyouraccount);
 router.get(
   "/hotels/:id/roomtypes",
   middleware.emailVerified,
-  indexController.gethotelsByidroomtypes);
+  async (req, res) => {
+    try {
+      const hotel = await Hotel.findById(req.params.id).populate("roomtypes");
+      const roomTypes = hotel.roomtypes;
+
+      console.log(hotel);
+      console.log(roomTypes)
+
+      res.render("pages/viewAccomodation", {
+        roomTypes,
+        hotelName: hotel.name,
+        hotel,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Server Error");
+    }
+  }
+);
 
 
 
 
 
 //Get hotel view specific hotels
-router.get("/hotels/HotelName", 
-indexController.gethotelsHotelName);
+router.get("/hotels/HotelName", async (req, res) => {
+  try {
+    let cart;
+    let guest;
+    let cartItemsCount = 0;
+
+    if (req.user) {
+      cart = await Cart.findOne({ user: req.user._id });
+      guest = await Guest.findOne({ user: req.user._id });
+
+      cartItemsCount = cart.items.reduce((acc, item) => acc + item.noRooms, 0);
+    }
+    if (!req.user || !cart) {
+      cart = new Cart({});
+    }
+    const pay = process.env.PAYSTACK_KEY;
+
+    res.render("bookings/hotel", {
+      //csrfToken: req.csrfToken(),
+      cart: cart,
+      pay: pay,
+      guest: guest,
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.redirect("/");
+  }
+});
 
 
 
 
 //routes to display car rentals  Data and all its associated routes
-router.get("/rentals", 
-indexController.getrentals);
-
+router.get("/rentals", async (req, res) => {
+  try {
+    //Queries heere
+    res.render("bookings/carR", {
+      market: req.t("home:market"),
+    });
+  } catch (err) {
+    console.log(err.message);
+    res.redirect("/");
+  }
+});
 
 
 
 //routes to display car rentals  Data and all its associated routes
-router.get("/marketplace",
-indexController.getmarketplace);
+router.get("/marketplace", async (req, res) => {
+  try {
+    //code here
+    res.render("bookings/market", {});
+  } catch (err) {
+    console.log(err.message);
+    res.redirect("/");
+  }
+});
 
 
-router.get("/food", 
-indexController.getfood);
+
+router.get("/food", async (req, res) => {
+  try {
+    //code here
+    res.render("bookings/food", {});
+  } catch (err) {
+    console.log(err.message);
+    res.redirect("/");
+  }
+});
+
 
 
 //routes to display car rentals  Data and all its associated routes
-router.get("/attractions", 
-indexController.getattractions);
-
+router.get("/attractions", async (req, res) => {
+  try {
+    //code here
+    res.render("bookings/attra", {});
+  } catch (err) {
+    console.log(err.message);
+    res.redirect("/");
+  }
+});
 
 
 

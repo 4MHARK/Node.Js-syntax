@@ -1,41 +1,20 @@
 const express = require("express");
-const Hotel = require("../../models/hotel");
-const MarketItem = require("../../models/market");
 const middleware = require("../../middleware/confirm");
 const storage = require("../../middleware/storage");
-const Category = require("../../models/category");
-const mongoose = require("mongoose");
 const fs = require("fs");
-const path = require("path");
-
+const marketController = require("../../controller/marketsController");
 const router = express.Router();
 
 
-
 // View all market items with dropdown for category
-router.get(
-  "/marketitems",
-  middleware.isLoggedIn,
-  middleware.isAdmin, marketController.getmarketitems);
-
-
-
-
+router.get("/marketitems",middleware.isLoggedIn,middleware.isAdmin, 
+marketController.getmarketitems);
 // GET Create a new hotel
-router.get(
-  "/create/products",
-  middleware.isLoggedIn,
-  middleware.isAdmin, marketController.getcreateBymarket);
- 
-
-
-
+router.get("/create/products",middleware.isLoggedIn,middleware.isAdmin, 
+marketController.getCreateProducts);
 // Create a new market item
-router.post("/create/products",
-storage({ single: 'productPicture' }), marketController.postcreateByproduct);
-
-
-
+router.post("/create/products", storage({ single: 'productPicture' }), 
+marketController.postCreateProducts);
 //GET:  Render the edit form
 router.get('/edit/products/:productId',
 marketController.geteditproductsByproductId);
@@ -58,7 +37,7 @@ marketController.getmarketitemsByid);
 
 
 // Delete a category by ID
-router.post("/products/delete", marketController.postproductsBydelete);
+router.post("/products/delete", marketController.postDeleteProducts);
 
 
 
